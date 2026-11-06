@@ -11,41 +11,41 @@ env:
   IS_DEPLOY: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 
 jobs:
-  #build-linux:
-   # runs-on: ubuntu-latest
-   # steps:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
 
-  #    - name: Checkout
-  #      uses: actions/checkout@main
+      - name: Checkout
+        uses: actions/checkout@main
 
-  #    - name: Install deps
-  #      run: |
-  #        sudo apt update
-  #        sudo apt install gcc-arm-none-eabi binutils-arm-none-eabi
+      - name: Install deps
+        run: |
+          sudo apt update
+          sudo apt install gcc-arm-none-eabi binutils-arm-none-eabi
 
-  #    - name: Compile
-  #      run: sh build.sh
+      - name: Compile
+        run: sh build.sh
 
       # No point in running the following steps if we are not deploying
       # See https://github.com/actions/runner/issues/1395 for why fromJSON() is needed
-  #    - name: Install to temp dir
+      - name: Install to temp dir
   #      if: fromJSON(env.IS_DEPLOY)
-  #      shell: bash
-  #      run: |
-  #        mkdir TEMPDIR
-  #        sh install.sh TEMPDIR
+        shell: bash
+        run: |
+          mkdir TEMPDIR
+          sh install.sh TEMPDIR
 
-  #    - name: Create release archive
-  #      if: fromJSON(env.IS_DEPLOY)
-  #      shell: bash
-  #      run: tar -C TEMPDIR/tools/agbcc -czf agbcc.tar.gz bin include lib
+      - name: Create release archive
+        if: fromJSON(env.IS_DEPLOY)
+        shell: bash
+        run: tar -C TEMPDIR/tools/agbcc -czf agbcc.tar.gz bin include lib
 
-  #    - name: Upload archive
-  #      uses: actions/upload-artifact@main
-  #      if: fromJSON(env.IS_DEPLOY)
-  #      with:
-  #        name: agbcc.tar.gz
-  #        path: agbcc.tar.gz
+      - name: Upload archive
+        uses: actions/upload-artifact@main
+        if: fromJSON(env.IS_DEPLOY)
+        with:
+          name: agbcc.tar.gz
+          path: agbcc.tar.gz
 
   build-macos:
     runs-on: macos-latest
