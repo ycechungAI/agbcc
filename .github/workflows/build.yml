@@ -7,8 +7,8 @@ on:
 
 # Note, Github Actions is dumb and only steps - not jobs - can access env.
 # Therefore, if you update this, make sure to update the deploy job below.
-#env:
-#  IS_DEPLOY: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+env:
+  IS_DEPLOY: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 
 jobs:
   #build-linux:
