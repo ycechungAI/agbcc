@@ -16,7 +16,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Install deps
         run: |
@@ -29,7 +29,7 @@ jobs:
       # No point in running the following steps if we are not deploying
       # See https://github.com/actions/runner/issues/1395 for why fromJSON() is needed
       - name: Install to temp dir
-  #      if: fromJSON(env.IS_DEPLOY)
+        if: fromJSON(env.IS_DEPLOY)
         shell: bash
         run: |
           mkdir TEMPDIR
@@ -41,10 +41,10 @@ jobs:
         run: tar -C TEMPDIR/tools/agbcc -czf agbcc.tar.gz bin include lib
 
       - name: Upload archive
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v4
         if: fromJSON(env.IS_DEPLOY)
         with:
-          name: agbcc.tar.gz
+          name: agbcc
           path: agbcc.tar.gz
 
   build-macos:
@@ -52,7 +52,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Install deps
         run: |
@@ -71,12 +71,13 @@ jobs:
     steps:
 
       - name: Download archive
-        uses: actions/download-artifact@main
+        uses: actions/download-artifact@v4
         with:
-          name: agbcc.tar.gz
+          name: agbcc
+          path: .
 
       - name: Update release
-        uses: ycechungAI/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
@@ -84,4 +85,4 @@ jobs:
           commit: ${{ github.sha }}
           makeLatest: true
           tag: release
-          #token: ${{ secrets.GITHUB_TOKEN }} # Automatically created by the workflow with a lifetime of one hour
+          token: ${{ secrets.GITHUB_TOKEN }}
